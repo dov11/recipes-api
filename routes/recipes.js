@@ -1,5 +1,7 @@
 const router = require('express').Router()
 const { Recipe } = require('../models')
+const passport = require('../config/auth')
+
 
 router.get('/recipes', (req, res, next) => {
   Recipe.find()
@@ -19,9 +21,10 @@ router.get('/recipes', (req, res, next) => {
       })
       .catch((error) => next(error))
   })
-  .post('/recipes', (req, res, next) => {
+  .post('/recipes', passport.authorize('jwt', { session: false }), (req, res, next) => {
     let newRecipe = req.body
-    // newRecipe.authorId = req.account._id
+    newRecipe.authorId = req.account._id
+    console.log(newRecipe)
 
     Recipe.create(newRecipe)
       .then((recipe) => res.json(recipe))
@@ -32,10 +35,10 @@ router.get('/recipes', (req, res, next) => {
     // newRecipe.authorId = req.account._id
     const id = req.params.id
     // Recipe.findById(id)
-    //   .then((recipe) => {
-    //     if (!recipe) { return next() }
+      // .then((recipe) => {
+        // if (!recipe) { return next() }
     //     // return recipe
-    //   }).then(() => {
+      // }).then(() => {
         Recipe.findByIdAndUpdate(id, newRecipe)
         .then(() => res.json({message: "updated"}))
         .catch((error) => next(error))
