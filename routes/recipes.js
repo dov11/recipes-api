@@ -8,7 +8,9 @@ router.get('/recipes', (req, res, next) => {
     // Newest recipes first
     .sort({ createdAt: -1 })
     // Send the data in JSON format
-    .then((recipes) => res.json(recipes))
+    .then((recipes) => {
+      return res.json(recipes)
+    })
     // Throw a 500 error if something goes wrong
     .catch((error) => next(error))
   })

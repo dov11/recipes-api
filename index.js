@@ -2,12 +2,13 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const { recipes, users, sessions } = require('./routes')
 const passport = require('./config/auth')
-
+const cors = require('cors')
 const port = process.env.PORT || 3030
 
 let app = express()
 
 app
+  .use(cors())
   .use(bodyParser.urlencoded({ extended: true }))
   .use(bodyParser.json())
   .use(passport.initialize())
